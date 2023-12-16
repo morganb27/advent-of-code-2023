@@ -8,12 +8,17 @@ function readFile(file_path) {
 }
 
 const data = readFile('input.txt')
-console.log(data);
 
 const rules = new Map([
     ["red", 12],
     ["green", 13],
     ["blue", 14]
+])
+
+const rulesPartTwo = new Map([
+    ["red", 1],
+    ["green", 1],
+    ["blue", 1]
 ])
 
 function sumIdsOfPossibleGames() {
@@ -22,10 +27,21 @@ function sumIdsOfPossibleGames() {
     for (let i = 0; i < parsedData.length; i++) {
         if (isSetOfCubesValid(parsedData[i].setOfCubes)) {
             sum+= parsedData[i].gameId;
-            console.log(parsedData[i].gameId)
         }
     }
     return sum;
+}
+
+function MultiplyMinimumSetOfCubes() {
+    const parsedData = parseInput(data);
+    console.log("parsedData", parsedData);
+    let sum = 0;
+
+    for(let i = 0; i<parsedData.length; i++) {
+        sum += calculatePowerOfSetOfCubes(parsedData[i].setOfCubes);
+    }
+    return sum;
+    
 }
 
 function parseInput(array) {
@@ -48,9 +64,7 @@ function isSetOfCubesValid(array) {
             for (const part of parts) {
                 if (part) {
                     const [number, color] = part.split(" ");
-                    console.log(number, color)
                     if (parseInt(number) > rules.get(color)) {
-                        console.log("rules.get(color)", rules.get(color))
                         return false;
                     }
                 }
@@ -60,4 +74,32 @@ function isSetOfCubesValid(array) {
     return true;
 }
 
-console.log(sumIdsOfPossibleGames());
+function calculatePowerOfSetOfCubes(array) {
+    let minRed = 1;
+    let minBlue = 1;
+    let minGreen = 1;
+    for (let line of array) {
+        let partsOfLine = [];
+        const [part1, part2, part3] = line.split(", ");
+        partsOfLine.push([part1, part2, part3]);
+        for (const parts of partsOfLine) {
+            for (const part of parts) {
+                if (part) {
+                    const [number, color] = part.split(" ");
+                    if (color === "red") {
+                        minRed = Math.max(minRed, number);
+                    } else if (color === "blue") {
+                        minBlue = Math.max(minBlue, number);
+                    } else if (color === "green") {
+                        minGreen = Math.max(minGreen, number)
+                    }
+                }
+            }
+        }
+    }
+    console.log(minRed, minBlue, minGreen )
+    return minRed * minBlue * minGreen;
+}
+
+// console.log(sumIdsOfPossibleGames());
+console.log(MultiplyMinimumSetOfCubes())
