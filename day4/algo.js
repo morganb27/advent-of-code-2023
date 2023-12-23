@@ -19,8 +19,6 @@ function calculateNumberOfPoints() {
         let isFirstMatch = true;
 
         for (number of myNumbers) {
-            console.log("myNubers", myNumbers);
-            console.log("xinning num", winningNumbers)
             if (winningNumbers.includes(number)) {
                 if (isFirstMatch) {
                     currentScore++;
@@ -30,10 +28,35 @@ function calculateNumberOfPoints() {
                 }
             }
         }
-        console.log("currentscore", currentScore)
         score+= currentScore;
     }
     return score;
+}
+
+function calculateNumberOfTotalScratchcards() {
+    const parsedData = parseInput(data);
+    const myArray = new Array(parsedData.length).fill(1);
+    
+    for (let i = 0; i < parsedData.length; i++) {
+        const winningNumbers = calculateTotalWinningNumbers(parsedData[i]);
+        console.log(winningNumbers);
+        let currentCardCopies = myArray[i];
+        for (let j = i +1; j <= i + winningNumbers; j++) {
+            myArray[j] += 1 * currentCardCopies;
+        }
+    }
+    return sumTotalScratchcards(myArray);
+}
+
+function calculateTotalWinningNumbers(array) {
+    const [winningNumbers, myNumbers] = array;
+        let totalWinningNumbers = 0;
+        for (let i = 0; i < myNumbers.length; i++) {
+            if (winningNumbers.includes(myNumbers[i])) {
+                totalWinningNumbers++;
+            }
+        }
+    return totalWinningNumbers;
 }
 
 function parseInput(data) {
@@ -48,4 +71,9 @@ function parseInput(data) {
     return parsedLines;
 }
 
-console.log(calculateNumberOfPoints());
+function sumTotalScratchcards(array) {
+    return array.reduce((acc, count) => acc + count, 0)
+}
+
+// console.log(calculateNumberOfPoints());
+console.log(calculateNumberOfTotalScratchcards())
